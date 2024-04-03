@@ -1,47 +1,49 @@
 root = { description }
-description {
- component_def
- | enum_def
- | property_definition
- | struct_def
- | constraint_def
- | explicit_component_inst
- | property_assignment
+description = { 
+    component_def
+    | enum_def
+    | property_definition
+    | struct_def
+    | constraint_def
+    | explicit_component_inst
+    | property_assignment
 }
 
-property_definition = property id { property_body } ;
-property_body = property_attribute { property_attribute }
-property_attribute =
- property_type
- | property_usage
- | property_default
- | property_constraint
-property_type = type = property_data_type [ array_type ] ;
-property_data_type =
- component_primary_type
- | ref
- | number
- | basic_data_type
-property_usage = component = property_comp_types ;
-property_comp_types = property_comp_type { | property_comp_type }
-property_comp_type =
- component_type
- | constraint
- | all
-property_default = default = constant_expression ;
-property_constraint= constraint = property_constraint_type ;
-property_constraint_type= componentwidth
-108 Copyright © 2015 - 2018 Accellera.
-All rights reserved.
-January 2018 SystemRDL 2.0
-B.3 Component definition
-component_def =
- component_named_def component_inst_type component_insts ;
- | component_anon_def component_inst_type component_insts ;
- | component_named_def [ component_insts ] ;
- | component_anon_def component_insts ;
- | component_inst_type component_named_def component_insts ;
- | component_inst_type component_anon_def component_insts ;
+property_definition = { "property" ~ id ~ "{" ~ property_body ~ "}" ~ ";" }
+property_body = { property_attribute { property_attribute } }
+property_attribute = {
+      property_type
+    | property_usage
+    | property_default
+    | property_constraint
+}
+
+property_type = { "type" ~ "=" ~ property_data_type ~ "[" array_type "]" ~ ";" }
+property_data_type = {
+      component_primary_type
+    | "ref"
+    | "number"
+    | basic_data_type
+}
+property_usage = {"component" ~ "=" ~ property_comp_types ~ ";" }
+property_comp_types = { property_comp_type { "|" ~ property_comp_type } }
+property_comp_type = {
+    component_type
+  | "constraint"
+  | "all"
+}
+property_default = { "default" ~ "=" ~ constant_expression ~ ";" }
+property_constraint = { "constraint" ~ "=" ~ property_constraint_type ~ ";" }
+property_constraint_type = { "componentwidth" }
+
+component_def = {
+      component_named_def component_inst_type component_insts ";"
+    | component_anon_def component_inst_type component_insts ";"
+    | component_named_def [ component_insts ] ";"
+    | component_anon_def component_insts ";"
+    | component_inst_type component_named_def component_insts ";"
+    | component_inst_type component_anon_def component_insts ";"
+}
 component_named_def= component_type id [ param_def ] component_body
 component_anon_def= component_type component_body
 component_body = { { component_body_elem } }
